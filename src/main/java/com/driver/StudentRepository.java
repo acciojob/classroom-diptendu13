@@ -38,8 +38,9 @@ public class StudentRepository {
                 studentsList.add(student);
                 teacherStudentsMap.put(teacher, studentsList);
             }
-            teacherMap.get(teacher).setNumberOfStudents(teacherMap.get(teacher).getNumberOfStudents()+1);
+            teacherMap.get(teacher).setNumberOfStudents(teacherStudentsMap.get(teacher).size());
         }
+
     }
 
     public Student getStudentByName(String name) {
@@ -50,20 +51,33 @@ public class StudentRepository {
         return teacherMap.get(name);
     }
     public List<String> getStudentsByTeacherName(String teacher){
-        return teacherStudentsMap.get(teacher);
+        List<String> students = teacherStudentsMap.get(teacher);
+        return students;
     }
     public List<String> getAllStudents(){
         List<String> students = new ArrayList<>();
-        students.addAll(studentMap.keySet());
+        for (String student : studentMap.keySet()){
+            students.add(student);
+        }
         return students;
     }
 
     public void deleteTeacherByName(String teacher) {
+        List<String> students = teacherStudentsMap.get(teacher);
+        for (String student : students){
+            studentMap.remove(student);
+        }
         teacherStudentsMap.remove(teacher);
         teacherMap.remove(teacher);
     }
 
     public void deleteAllTeachers() {
+        for (String teacher : teacherStudentsMap.keySet()){
+            List<String> students = teacherStudentsMap.get(teacher);
+            for (String student : students){
+                studentMap.remove(student);
+            }
+        }
         teacherStudentsMap.clear();
         teacherMap.clear();
     }
